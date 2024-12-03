@@ -3,6 +3,12 @@ const Curso = require('../models/curso_model');
 const ruta = express.Router();
 
 ruta.get('/', (req, res) => {
+    let resultado = listarCursosActivos();
+    resultados.then(cursos =>{
+        res.json(cursos);
+    }).catch(err => {
+        res.status(400).json(err);
+    })
     res.json('respuesta a peticion GET de CURSOS funcionando correctamente...');
 });
 
@@ -72,5 +78,11 @@ ruta.delete('/:id', (req, res) => {
         })
     });
 });
+
+async function listarCursosActivos(){
+    let cursos = await curso.find({"estado": true});
+    return cursos;
+}
+
 
 module.exports = ruta;
