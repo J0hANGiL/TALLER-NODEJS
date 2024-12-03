@@ -4,6 +4,16 @@ const joi = require('@hapi/joi');
 const ruta = express.Router();
 
 ruta.get('/', (req,res)=>{
+    let resultado = listaUsuariosActivos();
+    resultado.then(usuarios =>{
+        res.json(usuarios)
+    }).catch(err =>{
+        res.status(400).json(
+            {
+                err
+            }
+        )
+    })
     res.json('respuesta a peticion GET de USUARIOS funcionando correctamente...');
 });
 
@@ -100,5 +110,20 @@ ruta.delete('/:email', (req, res) => {
             })
         });
 });
+
+async function desactivarUsuario(email){
+    let usuario = await Usuario.findOneAndUpdate({"email": email},{
+        $set: {
+            estado: false 
+        }
+    }, {new: true });
+    return usuario;
+}
+
+//funcion asincrona para listar todos los usuarios activos
+async function listaUsuarioActivos(){
+    let usuarios = await Usuario.find({"estado": true});
+    return usuarios;
+}
 
 module.exports = ruta;
