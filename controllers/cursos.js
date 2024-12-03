@@ -1,9 +1,9 @@
 const express = require('express');
-const Curso = require('../models/curso_model');
+const Curso = require('../models/curso_logic');
 const ruta = express.Router();
 
 ruta.get('/', (req, res) => {
-    let resultado = listarCursosActivos();
+    let resultado = logic.listarCursosActivos();
     resultados.then(cursos =>{
         res.json(cursos);
     }).catch(err => {
@@ -14,18 +14,18 @@ ruta.get('/', (req, res) => {
 
 //Funcion asincrona para crear un objeto de tipo usuario
 async function crearCurso(body) {
-    let usuario = new Usuario({
+    let curso = new Curso ({
         titulo: body.titulo,
         descripcion: body.descripcion,
         alumnos: body.alumnos,
         calificacion: body.calificacion
     });
-    return await usuario.save();
+    return await curso.save();
 }
 
 //Endpoint de tipo POST para el recurso CURSO
 ruta.post('/', (req, res) => {
-    let resultado = crearCurso(req.body);
+    let resultado = logic.crearCurso(req.body);
 
     resultado.then(user => {
         res.json({
@@ -49,7 +49,7 @@ async function actualizarCurso(id, body) {
 }
 
 ruta.put('/:id', (req, res) => {
-    let resultado = actualizarCurso(req.params.id, req.body);
+    let resultado = logic.actualizarCurso(req.params.id, req.body);
     resultado.then(curso => {
         res.json(curso)
     }).catch(err => {
@@ -69,7 +69,7 @@ async function desactivarcurso(id) {
 }
 
 ruta.delete('/:id', (req, res) => {
-    let resultado = desactivarCurso(req.params.id);
+    let resultado = logic.desactivarCurso(req.params.id);
     resultado.then(curso =>{
         res.json(curso)
     }).catch(err => {
